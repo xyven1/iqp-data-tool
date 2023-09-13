@@ -1,6 +1,7 @@
 <template>
   <v-app-bar>
-    <v-toolbar-title>ISS Scooter Data</v-toolbar-title>
+    <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+    <v-spacer />
     <v-btn v-if="!user" @click="signinRedirect()">
       Sign-in with Google
     </v-btn>
@@ -17,6 +18,16 @@
       </v-avatar>
     </template>
   </v-app-bar>
+  <v-navigation-drawer v-model="drawer" temporary>
+    <v-list>
+      <v-list-item v-for="(route, i) of useRouter().getRoutes().filter(v => v.meta.nav && (v.meta.auth ? !!user : true))" :key="i" :to="route.path" exact color="secondary">
+        <template #prepend>
+          <v-icon :icon="route.meta.icon" />
+        </template>
+        <v-list-item-title v-text="route.name" />
+      </v-list-item>  
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script setup lang="ts">
@@ -28,7 +39,10 @@ signInWithRedirect,
 signOut
 } from 'firebase/auth';
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useCurrentUser, useFirebaseAuth } from 'vuefire';
+
+const drawer = ref(false);
 
 const user = useCurrentUser()
 const auth = useFirebaseAuth()! // only exists on client side

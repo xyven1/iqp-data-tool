@@ -86,8 +86,8 @@ function add(value: number) {
 .number-chip-btn {
   border-radius: 0 !important;
   height: 9999px !important;
-  padding-right: 12px  !important;
-  padding-left: 12px  !important;
+  padding-right: 8px !important;
+  padding-left: 8px !important;
 }
 
 .no-arrows {

@@ -1,7 +1,21 @@
 // Composables
-import { createRouter, createWebHistory } from "vue-router";
+import { mdiClipboard, mdiViewList } from "@mdi/js";
+import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
+import "vue-router";
+import { getCurrentUser } from "vuefire";
 
-const routes = [
+// To ensure it is treated as a module, add at least one `export` statement
+export {};
+
+declare module "vue-router" {
+  interface RouteMeta {
+    nav: boolean;
+    auth: boolean;
+    icon: string;
+  }
+}
+
+const routes: RouteRecordRaw[] = [
   {
     path: "/",
     component: () => import("@/layouts/default/Default.vue"),
@@ -10,7 +24,9 @@ const routes = [
         path: "",
         name: "Take Data",
         meta: {
-          bottomNav: true,
+          nav: true,
+          auth: false,
+          icon: mdiClipboard,
         },
         component: () => import("@/views/TakeData.vue"),
       },
@@ -18,28 +34,25 @@ const routes = [
         path: "view-data",
         name: "View Data",
         meta: {
-          bottomNav: true,
+          nav: true,
+          auth: true,
+          icon: mdiViewList,
         },
         component: () => import("@/views/ViewData.vue"),
       },
     ],
   },
-  // {
-  //   path: "/login",
-  //   name: "Login",
-  //   component: () => import("@/views/Login.vue"),
-  // },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-
-// router.beforeEach((to) => {
-//   if (to.name !== "Login" && !localStorage.getItem("user")) {
-//     return { name: "Login" };
-//   }
-// });
+router.beforeEach(async (to) => {
+  if (to.meta.auth) {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) return false;
+  }
+});
 
 export default router;

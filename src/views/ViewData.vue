@@ -1,16 +1,27 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
       <v-col>
-        <v-data-table :headers="headers" :items="entries" :items-per-page="10" density="compact">
+        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
+        <v-chip-group v-model="groupBy" multiple class="align-center">
+          <span class="text-body-1 mr-1">
+            Group By:
+          </span>
+          <v-chip v-for="(group, i) of groupBys" :key="i" :value="group" filter variant="tonal" color="primary">
+            {{ group.title }}
+          </v-chip>
+        </v-chip-group>
+        <v-data-table
+          :headers="headers" :items="entries" :search="search" :group-by="groupBy" :items-per-page="10"
+          density="compact"
+        >
           <template #item.actions="{ item }">
             <v-btn
-              :icon="mdiTrashCan" color="error" variant="text"
-              @click="() => {
-                remove(ref(db, 'entries/' + item.key))
-                console.log(item)}"
+              :icon="mdiTrashCan" color="error" variant="text" @click="() => {
+                remove(dbRef(db, 'entries/' + item.key))
+              }"
             />
-          </template>  
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -18,20 +29,53 @@
 </template>
 <script setup lang="ts">
 import { db } from '@/firebase';
-import { Data } from '@/types/data';
+import { Data, NumberDataTypes } from '@/types/data';
 import { mdiTrashCan } from '@mdi/js';
-import { ref, remove } from 'firebase/database';
+import { ref as dbRef, remove } from 'firebase/database';
+import { Ref, ref, watch } from 'vue';
 import { useDatabaseList } from 'vuefire';
-
-const entriesRef = ref(db, 'entries')
+const entriesRef = dbRef(db, 'entries')
 const entries = useDatabaseList<Data>(entriesRef)
-// entries.value[0].star
-const headers = [
-  { title: 'Recorder', key: 'recorder' },
-  { title: 'Date', key: 'startTime'},
-  { title: 'Riding', key: 'numberData.riding.value' },
-  { title: 'Fallen', key: 'numberData.parkedFallen.value' },
-  { title: 'Upright', key: 'numberData.parkedUpright.value' },
-  { title: '', key: 'actions', sortable: false },
-];
+
+const search = ref('')
+const groupBy = ref([])
+
+watch(groupBy, v => {
+  console.log(v)
+});
+
+const groupBys: DataTableHeader[] = [{
+  title: "Recorder",
+  key: "recorder",
+  sortable: true
+}, {
+  title: "Location",
+  key: "location",
+  sortable: true
+}];
+const headers: Ref<DataTableHeader[]> = ref([{
+  title: "Recorder",
+  key: "recorder",
+  sortable: true
+}, {
+  title: "Location",
+  key: "location",
+  sortable: true
+}]);
+headers.value.push(...Object.entries(NumberDataTypes).map(([name, type]) => ({
+  title: name,
+  key: type,
+  sortable: true,
+})))
+headers.value.push({
+  title: 'Actions',
+  key: 'actions',
+  sortable: false,
+})
+
+type DataTableHeader = {
+  title: string;
+  key: string;
+  sortable: boolean;
+}
 </script>
