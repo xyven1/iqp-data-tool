@@ -61,11 +61,18 @@ export const NumberDataSet = (): NumberDataSet => {
   };
 };
 export const Members = ["Blake", "Hunter", "Mike", "Jonathon"];
+export const Locations = ["Loc 1", "Loc2"];
 export type Data = {
-  startTime: Date;
+  startTime?: Date;
+  endTime?: Date;
+  location: string;
+  recorder: string;
   numberData: NumberDataSet;
 };
 export const Data = (): Data => ({
-  startTime: new Date(),
+  startTime: undefined,
+  endTime: undefined,
+  location: "",
+  recorder: "",
   numberData: NumberDataSet(),
 });

@@ -2,30 +2,30 @@
   <div class="number-chip">
     <span class="number-chip-underlay" />
     <v-btn
-      v-if="large != small" size="x-large" variant="flat" :min-width="0" class="number-chip-btn" color="primary"
-      @click="sub(large)"
+      v-if="outer != inner" size="x-large" variant="flat" :min-width="0" class="number-chip-btn" color="primary"
+      @click="sub(outer)"
     >
-      <v-icon :icon="mdiMinus" />{{ large === 1 ? "" : large }}
+      <v-icon :icon="mdiMinus" />{{ outer === 1 ? "" : outer }}
     </v-btn>
-    <v-btn variant="tonal" size="x-large" color="primary" :min-width="0" class="number-chip-btn" @click="sub(small)">
-      <v-icon :icon="mdiMinus" />{{ small === 1 ? "" : small }}
+    <v-btn variant="tonal" size="x-large" color="primary" :min-width="0" class="number-chip-btn" @click="sub(inner)">
+      <v-icon :icon="mdiMinus" />{{ inner === 1 ? "" : inner }}
     </v-btn>
     <v-text-field
       variant="plain" type="number" class="no-arrows text-h5 mb-2" :model-value="modelValue" :min="min"
-      :max="max" hide-details density="compact" :step="small" @update:model-value="(n) => {
+      :max="max" hide-details density="compact" :step="inner" @update:model-value="(n) => {
         const num = Number(n)
         if (isNaN(num)) return;
         emit('update:modelValue', Math.min(Math.max(num, min), max))
       }"
     />
-    <v-btn variant="tonal" size="x-large" :min-width="0" class="number-chip-btn" color="primary" @click="add(small)">
-      <v-icon :icon="mdiPlus" />{{ small === 1 ? "" : small }}
+    <v-btn variant="tonal" size="x-large" :min-width="0" class="number-chip-btn" color="primary" @click="add(inner)">
+      <v-icon :icon="mdiPlus" />{{ inner === 1 ? "" : inner }}
     </v-btn>
     <v-btn
-      v-if="large != small" size="x-large" :min-width="0" class="number-chip-btn" variant="flat" color="primary"
-      @click="add(large)"
+      v-if="outer != inner" size="x-large" :min-width="0" class="number-chip-btn" variant="flat" color="primary"
+      @click="add(outer)"
     >
-      <v-icon :icon="mdiPlus" /> {{ large === 1 ? "" : large }}
+      <v-icon :icon="mdiPlus" /> {{ outer === 1 ? "" : outer }}
     </v-btn>
   </div>
 </template>
@@ -34,8 +34,8 @@
 import { mdiMinus, mdiPlus } from "@mdi/js";
 export interface Props {
   modelValue?: number;
-  small?: number;
-  large?: number;
+  inner?: number;
+  outer?: number;
   min?: number;
   max?: number;
 }
@@ -44,8 +44,8 @@ const emit = defineEmits<{
 }>();
 const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
-  small: 1,
-  large: 5,
+  inner: 1,
+  outer: 5,
   min: -Infinity,
   max: Infinity,
 });
