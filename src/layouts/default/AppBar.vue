@@ -26,10 +26,16 @@
         :prepend-icon="route.meta.icon"
       />
     </v-list>
+    <template #append>
+      <div class="mx-3 d-flex justify-center">
+        <theme-toggle class="flex-grow-0" />
+      </div>
+    </template>
   </v-navigation-drawer>
 </template>
 
 <script setup lang="ts">
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import { googleAuthProvider } from '@/firebase';
 import { mdiAccount } from '@mdi/js';
 import {
