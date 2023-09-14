@@ -1,7 +1,6 @@
 // Plugins
 import vue from "@vitejs/plugin-vue";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
-import Unfonts from "unplugin-fonts/vite";
 
 // Utilities
 import { defineConfig } from "vite";
@@ -18,16 +17,6 @@ export default defineConfig({
       autoImport: true,
       styles: {
         configFile: "src/styles/settings.scss",
-      },
-    }),
-    Unfonts({
-      google: {
-        families: [
-          {
-            name: "Montserrat",
-            styles: "wght@100..900",
-          },
-        ],
       },
     }),
   ],

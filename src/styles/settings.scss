@@ -8,12 +8,3 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
-
-$font-family: 'Montserrat', sans-serif !important;
-
-.v-application {
-  [class*='text-'] {
-    font-family: $font-family;
-  }
-  font-family: $font-family;
-}
