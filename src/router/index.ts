@@ -1,5 +1,5 @@
 // Composables
-import { mdiClipboard, mdiViewList } from "@mdi/js";
+import { mdiClipboard, mdiQrcodePlus, mdiViewList } from "@mdi/js";
 import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
 import "vue-router";
 import { getCurrentUser } from "vuefire";
@@ -39,6 +39,16 @@ const routes: RouteRecordRaw[] = [
           icon: mdiViewList,
         },
         component: () => import("@/views/ViewData.vue"),
+      },
+      {
+        path: "qr-codes",
+        name: "QR Codes",
+        meta: {
+          nav: true,
+          auth: true,
+          icon: mdiQrcodePlus,
+        },
+        component: () => import("@/views/QRCodes.vue"),
       },
     ],
   },

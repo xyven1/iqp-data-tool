@@ -28,12 +28,12 @@
   </v-container>
 </template>
 <script setup lang="ts">
-import { db } from '@/firebase';
 import { Data, NumberDataTypes } from '@/types/data';
 import { mdiTrashCan } from '@mdi/js';
 import { ref as dbRef, remove } from 'firebase/database';
 import { Ref, ref, watch } from 'vue';
-import { useDatabaseList } from 'vuefire';
+import { useDatabase, useDatabaseList } from 'vuefire';
+const db = useDatabase();
 const entriesRef = dbRef(db, 'entries')
 const entries = useDatabaseList<Data>(entriesRef)
 

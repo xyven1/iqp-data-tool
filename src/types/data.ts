@@ -22,17 +22,17 @@ export type Comment = {
 };
 
 export const Members = ["Blake", "Hunter", "Mike", "Jonathon"];
-export const Locations = ["Loc 1", "Loc2"];
+export const Locations = ["Midborg", "University", "Tun", "Leiti"];
 export type Data = {
-  startTime?: Date;
-  endTime?: Date;
+  start?: string;
+  end?: string;
   location: string;
   recorder: string;
   comments: Comment[];
 } & NumberDataSet;
 export const Data = (): Data => ({
-  startTime: undefined,
-  endTime: undefined,
+  start: undefined,
+  end: undefined,
   location: "",
   recorder: "",
   comments: [],

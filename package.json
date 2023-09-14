@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
+    "@types/google.maps": "^3.54.0",
     "@vueuse/core": "^10.4.1",
     "core-js": "^3.29.0",
     "firebase": "^10.3.1",
@@ -19,6 +20,7 @@
     "roboto-fontface": "*",
     "vue": "^3.2.0",
     "vue-router": "^4.0.0",
+    "vue3-google-map": "^0.17.1",
     "vuefire": "^3.1.16",
     "vuetify": "^3.0.0",
     "webfontloader": "^1.0.0"
@@ -27,6 +29,7 @@
     "@babel/types": "^7.21.4",
     "@mdi/js": "^7.2.96",
     "@types/node": "^18.15.0",
+    "@types/supercluster": "^7.1.0",
     "@types/webfontloader": "^1.6.35",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",

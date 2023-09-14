@@ -14,9 +14,9 @@
               :disabled="!activeSession" validate-on="input" :rules="[v => !!v || 'Item is required']" density="compact"
               hide-details="auto"
             />
-            <p v-if="activeSession" class="text-center">
-              Current Session: {{ currentData.startTime?.toLocaleDateString() }} {{
-                currentData.startTime?.toLocaleTimeString() }}
+            <p v-if="activeSession && currentData.start" class="text-center">
+              Current Session: {{ new Date(currentData.start).toLocaleDateString() }} {{
+                new Date(currentData.start).toLocaleTimeString() }}
             </p>
             <v-chip
               v-if="coords.latitude === Infinity || !isSupported" class="text-center text-red"
@@ -63,7 +63,7 @@
                 <v-spacer />
                 <number-chip
                   v-model="currentData[type]" :inner="5" :outer="1" :min="0" :max="500"
-                  style="height: 35px; min-width: 240px;"
+                  style="height: 35px; min-width: 240px; max-width: 240px; width: 240px"
                 />
               </v-col>
             </v-row>
@@ -79,7 +79,6 @@
 
 <script lang="ts" setup>
 import NumberChip from '@/components/NumberChip.vue';
-import { db } from '@/firebase';
 import { useAppStore } from '@/store/app';
 import { Data, Locations, Members, NumberDataTypes } from '@/types/data';
 import { mdiMapMarkerOff } from '@mdi/js';
@@ -87,11 +86,13 @@ import { useGeolocation } from '@vueuse/core';
 import { ref as dbRef, push } from "firebase/database";
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
+import { useDatabase } from 'vuefire';
 import { SubmitEventPromise } from 'vuetify/lib/framework.mjs';
 
+const db = useDatabase();
 const { currentData, currentUser } = storeToRefs(useAppStore());
 
-const activeSession = computed(() => !!currentData.value?.startTime);
+const activeSession = computed(() => !!currentData.value?.start);
 
 const { coords, isSupported } = useGeolocation();
 const comment = ref('');
@@ -108,7 +109,7 @@ function addComment() {
 
 function start() {
   currentData.value = Data();
-  currentData.value.startTime = new Date();
+  currentData.value.start = new Date().toISOString();
   console.log(JSON.stringify(currentData.value));
 }
 const submitting = ref(false);
@@ -121,7 +122,7 @@ async function end(e: SubmitEventPromise) {
   if (!(await e).valid) return;
   try {
     submitting.value = true;
-    currentData.value.endTime = new Date();
+    currentData.value.end = new Date().toISOString();
     currentData.value.recorder = currentUser.value;
     await push(dbRef(db, "entries"), currentData.value);
     currentData.value = Data();
