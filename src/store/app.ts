@@ -6,11 +6,13 @@ import { Ref, ref } from "vue";
 export const useAppStore = defineStore(
   "app",
   () => {
+    const completedData: Ref<Data[]> = ref([]);
     const currentData: Ref<Data> = ref(Data());
     const currentUser = ref("");
     return {
       currentData,
       currentUser,
+      completedData,
     };
   },
   {

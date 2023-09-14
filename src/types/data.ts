@@ -15,14 +15,18 @@ export const NumberDataSet = (): NumberDataSet =>
   ) as NumberDataSet;
 
 export type Comment = {
+  index?: number;
+  time: string;
   latitude: number;
   longitude: number;
-  time: Date;
   comment: string;
 };
 
 export const Members = ["Blake", "Hunter", "Mike", "Jonathon"];
-export const Locations = ["Midborg", "University", "Tun", "Leiti"];
+export const Locations = [
+  ...["Midborg", "University", "Tun", "Leiti"],
+  ...(import.meta.env.DEV ? ["Test"] : []),
+];
 export type Data = {
   start?: string;
   end?: string;
