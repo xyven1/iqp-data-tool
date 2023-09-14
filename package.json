@@ -10,7 +10,6 @@
     "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,vue}\""
   },
   "dependencies": {
-    "@mdi/font": "7.0.96",
     "@vueuse/core": "^10.4.1",
     "core-js": "^3.29.0",
     "firebase": "^10.3.1",
