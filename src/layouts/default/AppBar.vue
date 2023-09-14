@@ -20,12 +20,11 @@
   </v-app-bar>
   <v-navigation-drawer v-model="drawer" temporary>
     <v-list>
-      <v-list-item v-for="(route, i) of useRouter().getRoutes().filter(v => v.meta.nav && (v.meta.auth ? !!user : true))" :key="i" :to="route.path" exact color="secondary">
-        <template #prepend>
-          <v-icon :icon="route.meta.icon" />
-        </template>
-        <v-list-item-title v-text="route.name" />
-      </v-list-item>  
+      <v-list-item
+        v-for="(route, i) of useRouter().getRoutes().filter(v => v.meta.nav && (v.meta.auth ? user : true))"
+        :key="i" :to="route.path" exact color="secondary" :title="route.name?.toString() ?? ''"
+        :prepend-icon="route.meta.icon"
+      />
     </v-list>
   </v-navigation-drawer>
 </template>
