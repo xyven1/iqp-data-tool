@@ -6,6 +6,7 @@
 
 // Styles
 import "vuetify/styles";
+import "unfonts.css";
 
 // Composables
 import { createVuetify } from "vuetify";
