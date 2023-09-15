@@ -111,9 +111,6 @@
       </div>
     </v-row>
     <v-row class="w-100 flex-grow-0 justify-end pa-1">
-      <v-btn color="primary" variant="tonal" class="ma-1" @click="center.lat += .0001">
-        Move {{ center.lat }}
-      </v-btn>
       <v-btn :prepend-icon="mdiMapMarkerPlus" color="primary" variant="tonal" class="ma-1" @click="addPoint">
         Add QRCode
       </v-btn>
