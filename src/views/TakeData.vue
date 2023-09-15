@@ -5,7 +5,7 @@
         <v-card :elevation="12" :max-width="400" class="w-100" density="compact">
           <v-card-text align="center">
             <v-select
-              v-model="currentRecorder" :items="Members" label="Current User" outlined dense clearable
+              v-model="currentRecorder" :items="Members" label="Recorder" outlined dense clearable
               validate-on="input" :rules="[v => !activeSession || !!v || 'Item is required']" density="compact"
               hide-details="auto"
             />
@@ -127,16 +127,17 @@
         <v-card :elevation="12" density="compact">
           <v-card-text>
             <v-row v-for="([name, type], i) of Object.entries(NumberDataTypes)" :key="i" no-gutters>
-              <v-col class="d-flex py-1 align-center">
+              <v-col class="d-flex align-center">
                 <div class="text-body-1 mr-2">
                   {{ name }}
                 </div>
                 <v-spacer />
                 <number-chip
                   v-model="currentData[type]" :inner="5" :outer="1" :min="0" :max="500"
-                  style="height: 35px; min-width: 240px; max-width: 240px; width: 240px"
+                  :height="48" :min-width="240" style="margin-top: 1px; margin-bottom: 1px;"
                 />
               </v-col>
+              <v-divider v-if="i != Object.entries(NumberDataTypes).length - 1" />
             </v-row>
           </v-card-text>
         </v-card>

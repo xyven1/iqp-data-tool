@@ -1,13 +1,23 @@
 <template>
-  <div class="number-chip">
+  <div
+    class="number-chip" :style="{
+      height: typeof props.height === 'number' ? props.height + 'px' : props.height,
+      minWidth: typeof props.minWidth === 'number' ? props.minWidth + 'px' : props.minWidth,
+      width: typeof props.width === 'number' ? props.width + 'px' : props.width,
+    }"
+  >
     <span class="number-chip-underlay" />
     <v-btn
-      v-if="outer != inner" size="x-large" variant="flat" :min-width="0" class="number-chip-btn" color="primary"
+      v-if="outer != inner" size="x-large" variant="flat" :min-width="0" :height="height" class="number-chip-btn"
+      color="primary"
       @click="sub(outer)"
     >
       <v-icon :icon="mdiMinus" />{{ outer === 1 ? "" : outer }}
     </v-btn>
-    <v-btn variant="tonal" size="x-large" color="primary" :min-width="0" class="number-chip-btn" @click="sub(inner)">
+    <v-btn
+      variant="tonal" size="x-large" color="primary" :min-width="0" :height="height" class="number-chip-btn"
+      @click="sub(inner)"
+    >
       <v-icon :icon="mdiMinus" />{{ inner === 1 ? "" : inner }}
     </v-btn>
     <v-text-field
@@ -18,11 +28,15 @@
         emit('update:modelValue', Math.min(Math.max(num, min), max))
       }"
     />
-    <v-btn variant="tonal" size="x-large" :min-width="0" class="number-chip-btn" color="primary" @click="add(inner)">
+    <v-btn
+      variant="tonal" size="x-large" :min-width="0" :height="height" class="number-chip-btn" color="primary"
+      @click="add(inner)"
+    >
       <v-icon :icon="mdiPlus" />{{ inner === 1 ? "" : inner }}
     </v-btn>
     <v-btn
-      v-if="outer != inner" size="x-large" :min-width="0" class="number-chip-btn" variant="flat" color="primary"
+      v-if="outer != inner" size="x-large" :min-width="0" :height="height" class="number-chip-btn" variant="flat"
+      color="primary"
       @click="add(outer)"
     >
       <v-icon :icon="mdiPlus" /> {{ outer === 1 ? "" : outer }}
@@ -38,6 +52,9 @@ export interface Props {
   outer?: number;
   min?: number;
   max?: number;
+  height?: number | string;
+  minWidth?: number | string;
+  width?: number | string;
 }
 const emit = defineEmits<{
   "update:modelValue": [value: number];
@@ -48,6 +65,9 @@ const props = withDefaults(defineProps<Props>(), {
   outer: 5,
   min: -Infinity,
   max: Infinity,
+  height: 50,
+  minWidth: 0,
+  width: Infinity,
 });
 
 function sub(value: number) {
@@ -85,7 +105,6 @@ function add(value: number) {
 
 .number-chip-btn {
   border-radius: 0 !important;
-  height: 9999px !important;
   padding-right: 8px !important;
   padding-left: 8px !important;
 }
