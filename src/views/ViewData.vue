@@ -31,7 +31,7 @@
 import { Data, NumberDataTypes } from '@/types/data';
 import { mdiTrashCan } from '@mdi/js';
 import { ref as dbRef, remove } from 'firebase/database';
-import { Ref, ref, watch } from 'vue';
+import { Ref, ref } from 'vue';
 import { useDatabase, useDatabaseList } from 'vuefire';
 const db = useDatabase();
 const entriesRef = dbRef(db, 'entries')
@@ -39,10 +39,6 @@ const entries = useDatabaseList<Data>(entriesRef)
 
 const search = ref('')
 const groupBy = ref([])
-
-watch(groupBy, v => {
-  console.log(v)
-});
 
 const groupBys: DataTableHeader[] = [{
   title: "Recorder",

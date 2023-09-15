@@ -10,7 +10,7 @@ import vuetify from "./vuetify";
 import pinia from "../store";
 import router from "../router";
 import { VueFire, VueFireAuth } from "vuefire";
-import { firebaseApp } from "../firebase";
+import { firebaseApp } from "../utils/firebase";
 // Types
 import type { App } from "vue";
 

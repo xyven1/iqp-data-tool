@@ -36,7 +36,7 @@
   <v-navigation-drawer v-model="drawer" temporary>
     <v-list>
       <v-list-item
-        v-for="(route, i) of useRouter().getRoutes().filter(v => v.meta.nav && (v.meta.auth ? user : true))"
+        v-for="(route, i) of useRouter().getRoutes().filter(v => v.meta.nav && (!v.meta.auth ? true : authorized))"
         :key="i" :to="route.path" exact color="secondary" :title="route.name?.toString() ?? ''"
         :prepend-icon="route.meta.icon"
       />
@@ -51,8 +51,9 @@
 
 <script setup lang="ts">
 import ThemeToggle from '@/components/ThemeToggle.vue';
-import { googleAuthProvider } from '@/firebase';
+import { googleAuthProvider } from '@/utils/firebase';
 import { mdiAccount, mdiLogin } from '@mdi/js';
+import { computedAsync } from '@vueuse/core';
 import {
 getRedirectResult,
 signInWithRedirect,
@@ -66,6 +67,13 @@ const drawer = ref(false);
 
 const user = useCurrentUser();
 const auth = useFirebaseAuth()!;
+
+const authorized = computedAsync(async () => {
+  if (!user.value) return false;
+  const token = await user.value.getIdTokenResult();
+  return token.claims.authorized as boolean;
+});
+
 const error = ref(null);
 function signinRedirect() {
   signInWithRedirect(auth, googleAuthProvider).catch((reason) => {

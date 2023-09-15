@@ -1,8 +1,8 @@
 // Composables
+import { isAuthorized } from "@/utils/auth";
 import { mdiClipboard, mdiQrcodePlus, mdiViewList } from "@mdi/js";
 import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
 import "vue-router";
-import { getCurrentUser } from "vuefire";
 
 // To ensure it is treated as a module, add at least one `export` statement
 export {};
@@ -65,14 +65,6 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-  if (to.meta.auth) {
-    const currentUser = await getCurrentUser();
-    if (
-      !currentUser ||
-      !(await currentUser.getIdTokenResult()).claims.authorized
-    )
-      return { path: "/" };
-  }
+  if (to.meta.auth && !(await isAuthorized())) return { path: "/" };
 });
-
 export default router;

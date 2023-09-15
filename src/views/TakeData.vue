@@ -5,7 +5,7 @@
         <v-card :elevation="12" :max-width="400" class="w-100" density="compact">
           <v-card-text align="center">
             <v-select
-              v-model="currentUser" :items="Members" label="Current User" outlined dense clearable
+              v-model="currentRecorder" :items="Members" label="Current User" outlined dense clearable
               validate-on="input" :rules="[v => !activeSession || !!v || 'Item is required']" density="compact"
               hide-details="auto"
             />
@@ -80,7 +80,7 @@
       <v-row class="w-100 align-center justify-center flex-grow-0" no-gutters>
         <v-card :elevation="12" :max-width="600" class="w-100 h-100" density="compact">
           <v-card-text>
-            <v-textarea v-model="comment.comment" hide-details density="compact" no-resize :rows="6" />
+            <v-textarea v-model="currentComment.comment" hide-details density="compact" no-resize :rows="6" />
           </v-card-text>
           <v-card-actions>
             <v-chip>
@@ -92,7 +92,7 @@
                   <v-list>
                     <v-list-item
                       v-for="(c, index) in currentData.comments" :key="index"
-                      @click="comment = currentData.comments[index]"
+                      @click="currentComment = currentData.comments[index]"
                     >
                       <v-list-item-title>
                         <use-time-ago
@@ -117,8 +117,8 @@
               </v-btn>
             </v-chip>
             <v-spacer />
-            <v-btn variant="flat" color="secondary" :disabled="comment.comment.length < 1" @click="saveComment">
-              {{ comment.index === undefined ? 'Save Comment' : 'Save Changes' }}
+            <v-btn variant="flat" color="secondary" :disabled="currentComment.comment.length < 1" @click="saveComment">
+              {{ currentComment.index === undefined ? 'Save Comment' : 'Save Changes' }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -161,45 +161,50 @@ import { computed, ref } from 'vue';
 import { useDatabase } from 'vuefire';
 import { SubmitEventPromise } from 'vuetify/lib/framework.mjs';
 
-const db = useDatabase();
-const { currentData, currentUser, completedData } = storeToRefs(useAppStore());
-
+const { currentData, currentRecorder, completedData, currentComment } = storeToRefs(useAppStore());
 const activeSession = computed(() => !!currentData.value?.start);
-
 const { coords, isSupported } = useGeolocation();
 
-const CommentDefault = (): Comment => ({
-  comment: "",
-  time: "",
-  latitude: Infinity,
-  longitude: Infinity,
-})
-const comment = ref<Comment>(CommentDefault());
-function saveComment() {
-  if (!activeSession.value || comment.value.comment.length < 1) return;
-  if (comment.value.index === undefined) {
-    comment.value.latitude = coords.value.latitude;
-    comment.value.longitude = coords.value.longitude;
-    comment.value.time = new Date().toISOString();
-    comment.value.index = currentData.value.comments.length;
-  }
-  currentData.value.comments[comment.value.index] = comment.value;
-  comment.value = CommentDefault();
-}
-
+// Session Management
 function start() {
   currentData.value = Data();
   currentData.value.start = new Date().toISOString();
-  console.log(JSON.stringify(currentData.value));
 }
 function reset() {
   if (!confirm("Are you sure you want to reset the current session? All data will be lost.")) return;
   currentData.value = Data();
 }
-
-console.log(completedData.value);
 const submitting = ref(false);
+async function saveSession(e: SubmitEventPromise) {
+  if (!activeSession.value) {
+    alert("Please start a session")
+    return;
+  }
+  if (!(await e).valid) return;
+  submitting.value = true;
+  currentData.value.end = new Date().toISOString();
+  currentData.value.recorder = currentRecorder.value;
+  completedData.value.push(currentData.value)
+  currentData.value = Data();
+  if (await sync() === 0) alert("Failed to sync");
+  submitting.value = false;
+}
 
+// Misc
+function saveComment() {
+  if (!activeSession.value || currentComment.value.comment.length < 1) return;
+  if (currentComment.value.index === undefined) {
+    currentComment.value.latitude = coords.value.latitude;
+    currentComment.value.longitude = coords.value.longitude;
+    currentComment.value.time = new Date().toISOString();
+    currentComment.value.index = currentData.value.comments.length;
+  }
+  currentData.value.comments[currentComment.value.index] = currentComment.value;
+  currentComment.value = Comment();
+}
+
+// Syncing
+const db = useDatabase();
 const syncing = ref(false);
 async function sync(): Promise<number> {
   if (syncing.value) return 0;
@@ -217,21 +222,6 @@ async function sync(): Promise<number> {
   const endingNum = completedData.value.length;
   syncing.value = false;
   return startingNum - endingNum;
-}
-
-async function saveSession(e: SubmitEventPromise) {
-  if (!activeSession.value) {
-    alert("Please start a session")
-    return;
-  }
-  if (!(await e).valid) return;
-  submitting.value = true;
-  currentData.value.end = new Date().toISOString();
-  currentData.value.recorder = currentUser.value;
-  completedData.value.push(currentData.value)
-  currentData.value = Data();
-  if (await sync() === 0) alert("Failed to sync");
-  submitting.value = false;
 }
 </script>
 

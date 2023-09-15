@@ -21,6 +21,12 @@ export type Comment = {
   longitude: number;
   comment: string;
 };
+export const Comment = (): Comment => ({
+  comment: "",
+  time: "",
+  latitude: Infinity,
+  longitude: Infinity,
+});
 
 export const Members = ["Blake", "Hunter", "Mike", "Jonathon"];
 export const Locations = [

@@ -24,9 +24,7 @@
           <CustomControl position="LEFT_BOTTOM">
             <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="cluster = !cluster">
               <v-expand-transition>
-                <v-icon
-                  v-if="cluster" style="position:absolute;" size="large" :icon="mdiCircleMultipleOutline"
-                />
+                <v-icon v-if="cluster" style="position:absolute;" size="large" :icon="mdiCircleMultipleOutline" />
                 <v-icon v-else style="position:absolute;" size="large" :icon="mdiNumeric9Circle" />
               </v-expand-transition>
             </v-btn>
@@ -34,14 +32,8 @@
           <CustomControl position="LEFT_BOTTOM">
             <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="dots = !dots">
               <v-expand-transition>
-                <v-icon
-                  v-if="dots" style="position:absolute;" size="large" :icon="mdiQrcode"
-                  color="primary"
-                />
-                <v-icon
-                  v-else style="position:absolute;" size="x-small" :icon="mdiCircleOutline"
-                  color="primary"
-                />
+                <v-icon v-if="dots" style="position:absolute;" size="large" :icon="mdiQrcode" color="primary" />
+                <v-icon v-else style="position:absolute;" size="x-small" :icon="mdiCircleOutline" color="primary" />
               </v-expand-transition>
             </v-btn>
           </CustomControl>
@@ -94,11 +86,8 @@
             }"
           />
           <component
-            :is="cluster ? MarkerCluster : 'div'" 
-            :options="{
-              algorithm: new SuperClusterAlgorithm({
-                maxZoom: 19,
-              })
+            :is="cluster ? MarkerCluster : 'div'" :options="{
+              algorithm: superCluster
             }"
           >
             <Marker
@@ -171,6 +160,9 @@ const { darkMode } = storeToRefs(useThemeStore());
 const theme = useTheme();
 
 // Maps
+const superCluster = new SuperClusterAlgorithm({
+  maxZoom: 19,
+});
 const cluster = ref(false);
 const dots = ref(false);
 const { coords } = useGeolocation();
@@ -184,7 +176,6 @@ watch(() => mapRef.value?.ready, (ready) => {
   if (!api.value || !map) return;
   api.value.event.addListener(map, 'mousedown', () => infoWindows.value.forEach((infoWindow) => infoWindow.close()));
   api.value.event.addListener(map, 'drag', () => centering.value = false);
-  api.value.event.addListener(map, 'zoom_changed', () => console.log(map.getZoom()));
 });
 const centering = ref(true);
 const center = ref<google.maps.LatLngLiteral>({
@@ -204,7 +195,6 @@ function updateCenter(coords: GeolocationCoordinates | false) {
     lng: coords.longitude,
   };
 }
-
 watch(() => centering.value && coords.value, updateCenter);
 
 // Database
