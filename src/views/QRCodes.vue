@@ -22,6 +22,30 @@
           ]]"
         >
           <CustomControl position="LEFT_BOTTOM">
+            <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="cluster = !cluster">
+              <v-expand-transition>
+                <v-icon
+                  v-if="cluster" style="position:absolute;" size="large" :icon="mdiCircleMultipleOutline"
+                />
+                <v-icon v-else style="position:absolute;" size="large" :icon="mdiNumeric9Circle" />
+              </v-expand-transition>
+            </v-btn>
+          </CustomControl>
+          <CustomControl position="LEFT_BOTTOM">
+            <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="dots = !dots">
+              <v-expand-transition>
+                <v-icon
+                  v-if="dots" style="position:absolute;" size="large" :icon="mdiQrcode"
+                  color="primary"
+                />
+                <v-icon
+                  v-else style="position:absolute;" size="x-small" :icon="mdiCircleOutline"
+                  color="primary"
+                />
+              </v-expand-transition>
+            </v-btn>
+          </CustomControl>
+          <CustomControl position="LEFT_BOTTOM">
             <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="centering = true; updateCenter(coords)">
               <v-expand-transition>
                 <v-icon
@@ -69,36 +93,47 @@
               zIndex: 0
             }"
           />
-          <Marker
-            v-for="point of qrcodeList" :key="point.id" :options="{
-              position: {
-                lat: point.latitude,
-                lng: point.longitude
-              },
-              icon: {
-                path: mdiQrcode,
-                fillColor: 'white',
-                strokeColor: theme.current.value.colors.primary,
-                anchor: {
-                  x: 12,
-                  y: 12,
-                } as google.maps.Point,
-                scale: 1.5,
-              },
-              zIndex: 5,
-              draggable: false,
-              clickable: true,
+          <component
+            :is="cluster ? MarkerCluster : 'div'" 
+            :options="{
+              algorithm: new SuperClusterAlgorithm({
+                maxZoom: 19,
+              })
             }"
           >
-            <InfoWindow ref="infoWindows">
-              <v-btn :append-icon="mdiTrashCan" color="error" variant="text" @click="deleteQRCode(point.id)">
-                Delete
-              </v-btn>
-            </InfoWindow>
-          </Marker>
+            <Marker
+              v-for="point of qrcodeList" :key="point.id" :options="{
+                position: {
+                  lat: point.latitude,
+                  lng: point.longitude
+                },
+                icon: {
+                  path: dots ? mdiCircleSmall : mdiQrcode,
+                  strokeColor: theme.current.value.colors.primary,
+                  anchor: {
+                    x: 12,
+                    y: 12,
+                  } as google.maps.Point,
+                  scale: 1.5,
+                },
+                zIndex: 5,
+                draggable: false,
+                clickable: true,
+              }"
+            >
+              <InfoWindow ref="infoWindows">
+                <v-btn :append-icon="mdiTrashCan" color="error" variant="text" @click="deleteQRCode(point.id)">
+                  Delete
+                </v-btn>
+              </InfoWindow>
+            </Marker>
+          </component>
         </GoogleMap>
       </div>
       <div class="flex-grow-0 d-flex flex-wrap justify-center align-center">
+        <v-chip class="ma-1">
+          Total Codes: {{ qrcodeList.length }}
+        </v-chip>
         <v-chip class="ma-1">
           Accuracy: {{ coords.accuracy.toFixed(2) }}
         </v-chip>
@@ -120,12 +155,13 @@
 <script setup lang="ts">
 import { useThemeStore } from '@/store/theme';
 import { QRCode } from '@/types/qrcode';
-import { mdiCrosshairs, mdiCrosshairsGps, mdiMapMarkerPlus, mdiQrcode, mdiTrashCan } from '@mdi/js';
+import { SuperClusterAlgorithm } from '@googlemaps/markerclusterer';
+import { mdiCircleMultipleOutline, mdiCircleOutline, mdiCircleSmall, mdiCrosshairs, mdiCrosshairsGps, mdiMapMarkerPlus, mdiNumeric9Circle, mdiQrcode, mdiTrashCan } from '@mdi/js';
 import { useGeolocation } from '@vueuse/core';
 import { push, ref as refDb, remove } from "firebase/database";
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
-import { Circle, CustomControl, GoogleMap, InfoWindow, Marker } from 'vue3-google-map';
+import { Circle, CustomControl, GoogleMap, InfoWindow, Marker, MarkerCluster } from 'vue3-google-map';
 import { dark as gmapsDark } from 'vue3-google-map/themes';
 import { useDatabase, useDatabaseList } from 'vuefire';
 import { useTheme } from 'vuetify/lib/framework.mjs';
@@ -135,6 +171,8 @@ const { darkMode } = storeToRefs(useThemeStore());
 const theme = useTheme();
 
 // Maps
+const cluster = ref(false);
+const dots = ref(false);
 const { coords } = useGeolocation();
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null);
 const infoWindows = ref<google.maps.InfoWindow[]>([]);
@@ -146,6 +184,7 @@ watch(() => mapRef.value?.ready, (ready) => {
   if (!api.value || !map) return;
   api.value.event.addListener(map, 'mousedown', () => infoWindows.value.forEach((infoWindow) => infoWindow.close()));
   api.value.event.addListener(map, 'drag', () => centering.value = false);
+  api.value.event.addListener(map, 'zoom_changed', () => console.log(map.getZoom()));
 });
 const centering = ref(true);
 const center = ref<google.maps.LatLngLiteral>({
