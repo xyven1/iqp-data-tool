@@ -145,7 +145,7 @@ watch(() => mapRef.value?.ready, (ready) => {
   const map = mapRef.value?.map;
   if (!api.value || !map) return;
   api.value.event.addListener(map, 'mousedown', () => infoWindows.value.forEach((infoWindow) => infoWindow.close()));
-  api.value.event.addListener(map, 'drag', () => centering.value = false );
+  api.value.event.addListener(map, 'drag', () => centering.value = false);
 });
 const centering = ref(true);
 const center = ref<google.maps.LatLngLiteral>({
@@ -155,7 +155,7 @@ const center = ref<google.maps.LatLngLiteral>({
 
 let counter = 0;
 function getCycle(): number {
-  counter = (counter + 1 )% 10;
+  counter = (counter + 1) % 10;
   return 1e-10 * counter;
 }
 function updateCenter(coords: GeolocationCoordinates | false) {
@@ -181,8 +181,10 @@ function addPoint() {
       new a.LatLng(coords.value.latitude, coords.value.longitude)
     );
     if (distance < 1) {
-      alert("There already appears to be a qrcode at this location");
-      return;
+      if (confirm("There already appears to be a qrcode at this location, are you sure you would like to add?"))
+        break;
+      else
+        return;
     }
   }
   push(qrcodes, {
