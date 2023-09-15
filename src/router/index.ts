@@ -52,16 +52,26 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: () => import("@/views/NotFound.vue"),
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
 router.beforeEach(async (to) => {
   if (to.meta.auth) {
     const currentUser = await getCurrentUser();
-    if (!currentUser) return false;
+    if (
+      !currentUser ||
+      !(await currentUser.getIdTokenResult()).claims.authorized
+    )
+      return { path: "/" };
   }
 });
 

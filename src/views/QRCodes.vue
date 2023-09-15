@@ -4,9 +4,9 @@
       <div class="flex-grow-1">
         <GoogleMap
           ref="mapRef" class="w-100 h-100" api-key="AIzaSyAsF0Boo8OBXxW2l9gCYduvF8nusQvHPls" :center="center"
-          :zoom="15" :libraries="[
+          :zoom="12" :libraries="[
             'geometry'
-          ]" :styles="[
+          ]" :styles="[...(darkMode ? gmapsDark : []), ...[
             {
               featureType: 'poi',
               stylers: [
@@ -19,16 +19,16 @@
                 { visibility: 'off' }
               ]
             },
-          ]"
+          ]]"
         >
           <CustomControl position="LEFT_BOTTOM">
-            <v-btn class="v-btn-gmaps" variant="flat" icon @click="centering = true">
+            <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="centering = true; updateCenter(coords)">
               <v-expand-transition>
                 <v-icon
                   v-if="centering" style="position:absolute;" size="large" :icon="mdiCrosshairsGps"
                   color="#5384ed"
                 />
-                <v-icon v-else style="position:absolute;" size="large" :icon="mdiCrosshairs" color="black" />
+                <v-icon v-else style="position:absolute;" size="large" :icon="mdiCrosshairs" />
               </v-expand-transition>
             </v-btn>
           </CustomControl>
@@ -111,6 +111,9 @@
       </div>
     </v-row>
     <v-row class="w-100 flex-grow-0 justify-end pa-1">
+      <v-btn color="primary" variant="tonal" class="ma-1" @click="center.lat += .0001">
+        Move {{ center.lat }}
+      </v-btn>
       <v-btn :prepend-icon="mdiMapMarkerPlus" color="primary" variant="tonal" class="ma-1" @click="addPoint">
         Add QRCode
       </v-btn>
@@ -118,56 +121,63 @@
   </v-container>
 </template>
 <script setup lang="ts">
+import { useThemeStore } from '@/store/theme';
 import { QRCode } from '@/types/qrcode';
 import { mdiCrosshairs, mdiCrosshairsGps, mdiMapMarkerPlus, mdiQrcode, mdiTrashCan } from '@mdi/js';
 import { useGeolocation } from '@vueuse/core';
 import { push, ref as refDb, remove } from "firebase/database";
-import { computed, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { ref, watch } from 'vue';
 import { Circle, CustomControl, GoogleMap, InfoWindow, Marker } from 'vue3-google-map';
+import { dark as gmapsDark } from 'vue3-google-map/themes';
 import { useDatabase, useDatabaseList } from 'vuefire';
 import { useTheme } from 'vuetify/lib/framework.mjs';
 
+// Themeing
+const { darkMode } = storeToRefs(useThemeStore());
 const theme = useTheme();
+
+// Maps
 const { coords } = useGeolocation();
+const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null);
 const infoWindows = ref<google.maps.InfoWindow[]>([]);
-
+const api = ref<typeof google.maps | null>(null);
+watch(() => mapRef.value?.ready, (ready) => {
+  if (!ready) return;
+  api.value = mapRef.value?.api ?? null;
+  const map = mapRef.value?.map;
+  if (!api.value || !map) return;
+  api.value.event.addListener(map, 'mousedown', () => infoWindows.value.forEach((infoWindow) => infoWindow.close()));
+  api.value.event.addListener(map, 'drag', () => centering.value = false );
+});
 const centering = ref(true);
+const center = ref<google.maps.LatLngLiteral>({
+  lat: 0,
+  lng: 0
+});
 
-const center = computed<google.maps.LatLngLiteral>(() =>
-  centering.value ?
-    {
-      lat: coords.value.latitude,
-      lng: coords.value.longitude
-    }
-    : {
-      lat: 0,
-      lng: 0
-    });
+let counter = 0;
+function getCycle(): number {
+  counter = (counter + 1 )% 10;
+  return 1e-10 * counter;
+}
+function updateCenter(coords: GeolocationCoordinates | false) {
+  if (!coords) return;
+  center.value = {
+    lat: coords.latitude + getCycle(),
+    lng: coords.longitude,
+  };
+}
 
+watch(() => centering.value && coords.value, updateCenter);
+
+// Database
 const db = useDatabase();
 const qrcodes = refDb(db, 'qrcodes');
 const qrcodeList = useDatabaseList<QRCode>(qrcodes);
-
-const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null);
-let api: typeof google.maps | null = null;
-watch(() => mapRef.value?.ready, (ready) => {
-  if (!ready) return;
-  api = mapRef.value?.api ?? null;
-  const map = mapRef.value?.map;
-  if (!api || !map) return;
-  api.event.addListener(map, 'click', () => {
-    infoWindows.value.forEach((infoWindow) => infoWindow.close());
-  });
-
-  api.event.addListener(map, 'dragstart', () => {
-    centering.value = false;
-    infoWindows.value.forEach((infoWindow) => infoWindow.close());
-  });
-});
-
 function addPoint() {
-  if (api === null) return;
-  let a = api;
+  if (api.value === null) return;
+  let a = api.value;
   for (const qrcode of qrcodeList.value) {
     const distance = a.geometry.spherical.computeDistanceBetween(
       new a.LatLng(qrcode.latitude, qrcode.longitude),
@@ -183,11 +193,9 @@ function addPoint() {
     longitude: coords.value.longitude,
   });
 }
-
 function deleteQRCode(id: string) {
   remove(refDb(db, 'qrcodes/' + id))
 }
-
 </script>
 
 <style lang="scss">
@@ -196,5 +204,9 @@ function deleteQRCode(id: string) {
   box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
   margin: 10px;
   min-width: 0px;
+}
+
+.mapdiv>div>div>div {
+  background-color: rgb(var(--v-theme-background));
 }
 </style>
