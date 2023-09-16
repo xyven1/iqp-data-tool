@@ -20,7 +20,56 @@ export default defineConfig({
         configFile: "src/styles/settings.scss",
       },
     }),
-    VitePWA({ registerType: "autoUpdate" }),
+    VitePWA({
+      registerType: "autoUpdate",
+      manifest: {
+        name: "Internal ISS Tools",
+        short_name: "ISS Tools",
+        description:
+          "Collection of all the internal tools for the Icelandic Scooter Squad",
+        theme_color: "#1867C0",
+        icons: [
+          {
+            src: "manifest-icon-192.maskable.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "manifest-icon-192.maskable.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "maskable",
+          },
+          {
+            src: "manifest-icon-512.maskable.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "manifest-icon-512.maskable.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
+          },
+        ],
+        shortcuts: [
+          {
+            name: "Take Data",
+            short_name: "Take Data",
+            description: "Data collection Tool",
+            url: "/take-data",
+          },
+          {
+            name: "QR Codes",
+            short_name: "QR Codes",
+            description: "Edit QR codes",
+            url: "/qr-codes",
+          },
+        ],
+      },
+    }),
   ],
   define: { "process.env": {} },
   resolve: {

@@ -18,7 +18,7 @@
               Sessions Not Synced: {{ completedData.length }}
               <div class="pr-2" />
               <v-btn
-                v-show="completedData.length > 0" id="oldDataEdit" variant="text" color="secondary" :min-width="0"
+                v-show="completedData.length > 0" id="oldDataEdit" variant="text" color="primary" :min-width="0"
                 class="px-2"
               >
                 Edit
@@ -44,7 +44,7 @@
                 </v-menu>
               </v-btn>
               <v-btn
-                variant="text" color="secondary" :disabled="completedData.length === 0 || syncing" :loading="syncing"
+                variant="text" color="primary" :disabled="completedData.length === 0 || syncing" :loading="syncing"
                 :min-width="0" class="px-2" @click="sync"
               >
                 Sync
@@ -62,14 +62,14 @@
             </v-chip>
           </v-card-text>
           <v-card-actions class="justify-center">
-            <v-btn v-if="!activeSession" color="secondary" variant="flat" class="ma-1" @click="start">
+            <v-btn v-if="!activeSession" color="primary" variant="flat" class="ma-1" @click="start">
               Start New Session
             </v-btn>
             <template v-else>
-              <v-btn color="secondary" variant="flat" class="ma-1" @click="reset">
+              <v-btn color="primary" variant="flat" class="ma-1" @click="reset">
                 Reset Session
               </v-btn>
-              <v-btn v-if="activeSession" color="secondary" variant="flat" class="ma-1" type="submit">
+              <v-btn v-if="activeSession" color="primary" variant="flat" class="ma-1" type="submit">
                 Save Session
               </v-btn>
             </template>
@@ -86,9 +86,9 @@
             <v-chip>
               Comments: {{ currentData.comments.length }}
               <div class="pr-2" />
-              <v-btn variant="text" color="secondary" :min-width="0" class="px-2">
+              <v-btn variant="text" color="primary" :min-width="0" class="px-2" :disabled="currentData.comments.length === 0">
                 Edit
-                <v-menu v-if="currentData.comments.length > 0" activator="parent">
+                <v-menu activator="parent">
                   <v-list>
                     <v-list-item
                       v-for="(c, index) in currentData.comments" :key="index"
@@ -117,7 +117,7 @@
               </v-btn>
             </v-chip>
             <v-spacer />
-            <v-btn variant="flat" color="secondary" :disabled="currentComment.comment.length < 1" @click="saveComment">
+            <v-btn variant="flat" color="primary" :disabled="currentComment.comment.length < 1" @click="saveComment">
               {{ currentComment.index === undefined ? 'Save Comment' : 'Save Changes' }}
             </v-btn>
           </v-card-actions>

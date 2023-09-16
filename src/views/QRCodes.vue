@@ -24,16 +24,16 @@
           <CustomControl position="LEFT_BOTTOM">
             <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="cluster = !cluster">
               <v-expand-transition>
-                <v-icon v-if="cluster" style="position:absolute;" size="large" :icon="mdiCircleMultipleOutline" />
-                <v-icon v-else style="position:absolute;" size="large" :icon="mdiNumeric9Circle" />
+                <v-icon v-if="cluster" class="position-absolute" size="large" :icon="mdiCircleMultipleOutline" />
+                <v-icon v-else class="position-absolute" size="large" :icon="mdiNumeric9Circle" />
               </v-expand-transition>
             </v-btn>
           </CustomControl>
           <CustomControl position="LEFT_BOTTOM">
             <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="dots = !dots">
               <v-expand-transition>
-                <v-icon v-if="dots" style="position:absolute;" size="large" :icon="mdiQrcode" color="primary" />
-                <v-icon v-else style="position:absolute;" size="x-small" :icon="mdiCircleOutline" color="primary" />
+                <v-icon v-if="dots" class="position-absolute" size="large" :icon="mdiQrcode" color="secondary" />
+                <v-icon v-else class="position-absolute" size="x-small" :icon="mdiCircleOutline" color="secondary" />
               </v-expand-transition>
             </v-btn>
           </CustomControl>
@@ -41,10 +41,10 @@
             <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="centering = true; updateCenter(coords)">
               <v-expand-transition>
                 <v-icon
-                  v-if="centering" style="position:absolute;" size="large" :icon="mdiCrosshairsGps"
+                  v-if="centering" class="position-absolute" size="large" :icon="mdiCrosshairsGps"
                   color="#5384ed"
                 />
-                <v-icon v-else style="position:absolute;" size="large" :icon="mdiCrosshairs" />
+                <v-icon v-else class="position-absolute" size="large" :icon="mdiCrosshairs" />
               </v-expand-transition>
             </v-btn>
           </CustomControl>
@@ -98,7 +98,7 @@
                 },
                 icon: {
                   path: dots ? mdiCircleSmall : mdiQrcode,
-                  strokeColor: theme.current.value.colors.primary,
+                  strokeColor: theme.current.value.colors.secondary,
                   anchor: {
                     x: 12,
                     y: 12,
@@ -135,7 +135,7 @@
       </div>
     </v-row>
     <v-row class="w-100 flex-grow-0 justify-end pa-1">
-      <v-btn :prepend-icon="mdiMapMarkerPlus" color="primary" variant="tonal" class="ma-1" @click="addPoint">
+      <v-btn :prepend-icon="mdiMapMarkerPlus" color="secondary" variant="tonal" class="ma-1" @click="addPoint">
         Add QRCode
       </v-btn>
     </v-row>

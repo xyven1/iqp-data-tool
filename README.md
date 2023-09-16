@@ -1,5 +1,9 @@
 # essentials
 
+For genearting icons
+```
+npx pwa-asset-generator icon.svg ./public -b "linear-gradient(to right top, #0f126a, #333791)" -w -f -i index.html
+```
 ## Project setup
 
 ```
@@ -51,7 +55,3 @@ npm run lint
 # pnpm
 pnpm lint
 ```
-
-### Customize configuration
-
-See [Configuration Reference](https://vitejs.dev/config/).

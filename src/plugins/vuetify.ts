@@ -16,6 +16,11 @@ import {
   VDataTableVirtual,
 } from "vuetify/labs/VDataTable";
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
+
+const colors = {
+  primary: "#1867C0",
+  secondary: "#d8b50f",
+};
 export default createVuetify({
   components: {
     VDataTable,
@@ -32,16 +37,10 @@ export default createVuetify({
   theme: {
     themes: {
       light: {
-        colors: {
-          primary: "#dd822b",
-          secondary: "#5CBBF6",
-        },
+        colors,
       },
       dark: {
-        colors: {
-          primary: "#dd822b",
-          secondary: "#5CBBF6",
-        },
+        colors,
       },
     },
   },

@@ -10,11 +10,8 @@
         <template #activator="{ props }">
           <v-btn v-bind="props" icon>
             <v-avatar>
-              <v-img :src="user.photoURL ?? ''">
-                <template #placeholder>
-                  <v-icon :icon="mdiAccount" />
-                </template>
-              </v-img>
+              <v-icon :icon="mdiAccount" class="position-absolute" />
+              <v-img :src="user.photoURL ?? ''" class="position-absolute" />
             </v-avatar>
           </v-btn>
         </template>
@@ -37,7 +34,7 @@
     <v-list>
       <v-list-item
         v-for="(route, i) of useRouter().getRoutes().filter(v => v.meta.nav && (!v.meta.auth ? true : authorized))"
-        :key="i" :to="route.path" exact color="secondary" :title="route.name?.toString() ?? ''"
+        :key="i" :to="route.path" exact color="primary" :title="route.name?.toString() ?? ''"
         :prepend-icon="route.meta.icon"
       />
     </v-list>

@@ -7,7 +7,7 @@
           <span class="text-body-1 mr-1">
             Group By:
           </span>
-          <v-chip v-for="(group, i) of groupBys" :key="i" :value="group" filter variant="tonal" color="primary">
+          <v-chip v-for="(group, i) of groupBys" :key="i" :value="group" filter variant="tonal" color="secondary">
             {{ group.title }}
           </v-chip>
         </v-chip-group>

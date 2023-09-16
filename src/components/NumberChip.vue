@@ -4,18 +4,19 @@
       height: typeof props.height === 'number' ? props.height + 'px' : props.height,
       minWidth: typeof props.minWidth === 'number' ? props.minWidth + 'px' : props.minWidth,
       width: typeof props.width === 'number' ? props.width + 'px' : props.width,
+      maxWidth: typeof props.width === 'number' ? props.width + 'px' : props.width,
     }"
   >
     <span class="number-chip-underlay" />
     <v-btn
       v-if="outer != inner" size="x-large" variant="flat" :min-width="0" :height="height" class="number-chip-btn"
-      color="primary"
+      color="secondary"
       @click="sub(outer)"
     >
       <v-icon :icon="mdiMinus" />{{ outer === 1 ? "" : outer }}
     </v-btn>
     <v-btn
-      variant="tonal" size="x-large" color="primary" :min-width="0" :height="height" class="number-chip-btn"
+      variant="tonal" size="x-large" color="secondary" :min-width="0" :height="height" class="number-chip-btn"
       @click="sub(inner)"
     >
       <v-icon :icon="mdiMinus" />{{ inner === 1 ? "" : inner }}
@@ -29,14 +30,14 @@
       }"
     />
     <v-btn
-      variant="tonal" size="x-large" :min-width="0" :height="height" class="number-chip-btn" color="primary"
+      variant="tonal" size="x-large" :min-width="0" :height="height" class="number-chip-btn" color="secondary"
       @click="add(inner)"
     >
       <v-icon :icon="mdiPlus" />{{ inner === 1 ? "" : inner }}
     </v-btn>
     <v-btn
       v-if="outer != inner" size="x-large" :min-width="0" :height="height" class="number-chip-btn" variant="flat"
-      color="primary"
+      color="secondary"
       @click="add(outer)"
     >
       <v-icon :icon="mdiPlus" /> {{ outer === 1 ? "" : outer }}
