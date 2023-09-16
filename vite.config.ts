@@ -28,6 +28,7 @@ export default defineConfig({
         description:
           "Collection of all the internal tools for the Icelandic Scooter Squad",
         theme_color: "#1867C0",
+        background_color: "#0f126a",
         icons: [
           {
             src: "manifest-icon-192.maskable.png",

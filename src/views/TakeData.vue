@@ -3,7 +3,7 @@
     <v-container class="fill-height flex-column no-gutters-spaced">
       <v-row class="w-100 flex-grow-0 align-center justify-center" no-gutters>
         <v-card :elevation="12" :max-width="400" class="w-100" density="compact">
-          <v-card-text align="center">
+          <v-card-text align="center" class="v-card-text-spacing">
             <v-select
               v-model="currentRecorder" :items="Members" label="Recorder" outlined dense clearable
               validate-on="input" :rules="[v => !activeSession || !!v || 'Item is required']" density="compact"
@@ -134,7 +134,7 @@
                 <v-spacer />
                 <number-chip
                   v-model="currentData[type]" :inner="5" :outer="1" :min="0" :max="500"
-                  :height="48" :min-width="240" style="margin-top: 1px; margin-bottom: 1px;"
+                  :height="48" :min-width="240" :width="240" style="margin-top: 1px; margin-bottom: 1px;"
                 />
               </v-col>
               <v-divider v-if="i != Object.entries(NumberDataTypes).length - 1" />
@@ -233,7 +233,7 @@ async function sync(): Promise<number> {
   }
 }
 
-.v-card-text>*+* {
+.v-card-text-spacing > * + * {
   margin-top: 0.25rem;
 }
 
