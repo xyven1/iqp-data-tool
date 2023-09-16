@@ -3,7 +3,11 @@
  *
  * webfontloader documentation: https://github.com/typekit/webfontloader
  */
-
+import styles from "../styles/_export.module.scss";
+console.log(styles);
+const fontName =
+  (styles.fontFamily as string | undefined)?.split(",")[0]?.replace(/"/g, "") ??
+  "Roboto";
 export async function loadFonts() {
   const webFontLoader = await import(
     /* webpackChunkName: "webfontloader" */ "webfontloader"
@@ -11,7 +15,7 @@ export async function loadFonts() {
 
   webFontLoader.load({
     google: {
-      families: ["Roboto:100,300,400,500,700,900&display=swap"],
+      families: [`${fontName}:100,300,400,500,700,900&display=swap`],
     },
   });
 }
