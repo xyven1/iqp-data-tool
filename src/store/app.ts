@@ -1,6 +1,6 @@
 // Utilities
-import { defineStore } from "pinia";
 import { Comment, Data } from "@/types/data";
+import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
 
 export const useAppStore = defineStore(

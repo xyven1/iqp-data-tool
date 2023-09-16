@@ -1,11 +1,11 @@
 // Plugins
 import vue from "@vitejs/plugin-vue";
-import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import { VitePWA } from "vite-plugin-pwa";
+import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
 // Utilities
-import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
+import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({

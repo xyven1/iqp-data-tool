@@ -10,8 +10,7 @@
     <span class="number-chip-underlay" />
     <v-btn
       v-if="outer != inner" size="x-large" variant="flat" :min-width="0" :height="height" class="number-chip-btn"
-      color="secondary"
-      @click="sub(outer)"
+      color="secondary" @click="sub(outer)"
     >
       <v-icon :icon="mdiMinus" />{{ outer === 1 ? "" : outer }}
     </v-btn>
@@ -37,8 +36,7 @@
     </v-btn>
     <v-btn
       v-if="outer != inner" size="x-large" :min-width="0" :height="height" class="number-chip-btn" variant="flat"
-      color="secondary"
-      @click="add(outer)"
+      color="secondary" @click="add(outer)"
     >
       <v-icon :icon="mdiPlus" /> {{ outer === 1 ? "" : outer }}
     </v-btn>

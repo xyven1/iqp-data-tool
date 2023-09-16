@@ -5,12 +5,12 @@
  */
 
 // Plugins
-import { loadFonts } from "./webfontloader";
-import vuetify from "./vuetify";
-import pinia from "../store";
-import router from "../router";
 import { VueFire, VueFireAuth } from "vuefire";
+import router from "../router";
+import pinia from "../store";
 import { firebaseApp } from "../utils/firebase";
+import vuetify from "./vuetify";
+import { loadFonts } from "./webfontloader";
 // Types
 import type { App } from "vue";
 

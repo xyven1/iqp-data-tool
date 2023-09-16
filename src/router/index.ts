@@ -1,11 +1,11 @@
 // Composables
 import { isAuthorized } from "@/utils/auth";
 import { mdiClipboard, mdiQrcodePlus, mdiViewList } from "@mdi/js";
-import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
 import "vue-router";
+import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
 
 // To ensure it is treated as a module, add at least one `export` statement
-export {};
+export { };
 
 declare module "vue-router" {
   interface RouteMeta {
