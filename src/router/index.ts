@@ -1,5 +1,5 @@
 // Composables
-import { isAuthorized } from "@/utils/auth";
+import { handleSignInWithRedirectCode, isAuthorized } from "@/utils/auth";
 import { mdiClipboard, mdiQrcodePlus, mdiViewList } from "@mdi/js";
 import "vue-router";
 import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
@@ -51,6 +51,17 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/QRCodes.vue"),
       },
     ],
+  },
+  {
+    path: "/login",
+    redirect: (to) => {
+      if (typeof to.query.code === "string") {
+        handleSignInWithRedirectCode(to.query.code);
+        if (typeof to.query.state === "string")
+          return { path: to.query.state, query: {} };
+      }
+      return { path: "/", query: {} };
+    },
   },
   {
     path: "/:pathMatch(.*)*",

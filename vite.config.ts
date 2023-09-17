@@ -72,7 +72,11 @@ export default defineConfig({
       },
     }),
   ],
-  define: { "process.env": {} },
+  define: {
+    /* prettier-ignore */
+    "APP_VERSION": JSON.stringify(require("./package.json").version),
+    "process.env": {},
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

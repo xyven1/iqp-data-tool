@@ -4,7 +4,6 @@
  * webfontloader documentation: https://github.com/typekit/webfontloader
  */
 import styles from "../styles/_export.module.scss";
-console.log(styles);
 const fontName =
   (styles.fontFamily as string | undefined)?.split(",")[0]?.replace(/"/g, "") ??
   "Roboto";
