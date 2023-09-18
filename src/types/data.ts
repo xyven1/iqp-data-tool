@@ -28,7 +28,7 @@ export const Comment = (): Comment => ({
   longitude: Infinity,
 });
 
-export const Members = ["Blake", "Hunter", "Mike", "Jonathon"];
+export const Members = ["Blake", "Hunter", "Mike", "Jonathan"];
 export const Locations = [
   ...["Midborg", "University", "Tun", "Leiti"],
   ...(import.meta.env.DEV ? ["Test"] : []),
