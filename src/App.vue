@@ -9,20 +9,24 @@ import { useRoute, useRouter } from "vue-router";
 import { useCurrentUser } from "vuefire";
 
 useThemeStore();
-const user = useCurrentUser()
-const router = useRouter()
-const route = useRoute()
+const user = useCurrentUser();
+const router = useRouter();
+const route = useRoute();
 
 watch(user, async (currentUser, previousUser) => {
-  if (
-    !currentUser &&
-    previousUser &&
-    route.meta.auth
-  ) {
-    return router.push({ path: '/' })
+  if (!currentUser && previousUser && route.meta.auth) {
+    return router.push({ path: "/" });
   }
-  if (currentUser && typeof route.query.redirect === 'string') {
-    return router.push(route.query.redirect)
+  if (currentUser && typeof route.query.redirect === "string") {
+    return router.push(route.query.redirect);
   }
-})
+});
 </script>
+
+<style lang="scss">
+// html,
+// body,
+// #app {
+//   height: 100%;
+// }
+</style>
