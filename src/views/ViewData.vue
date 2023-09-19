@@ -2,7 +2,7 @@
   <v-container fluid>
     <!-- class="h-100 d-flex flex-column" -->
     <v-row class="flex-grow-0 justify-center align-center">
-      <v-col style="min-width: min(500px, 100%)">
+      <v-col style="min-width: min(400px, 100%)">
         <v-text-field
           v-model="search"
           label="Search"
@@ -17,6 +17,18 @@
           hide-details
           density="compact"
         />
+      </v-col>
+      <v-col class="v-col-auto">
+        <v-btn
+          hide-details
+          :prepend-icon="mdiSortVariantRemove"
+          :disabled="sortBy.length === 0"
+          color="primary"
+          variant="text"
+          @click="sortBy.length = 0"
+        >
+          Reset Sort
+        </v-btn>
       </v-col>
       <v-col class="v-col-auto">
         <v-chip-group
@@ -41,11 +53,16 @@
     <v-row class="flex-grow-1 overflow-auto">
       <v-col ref="tableCol">
         <v-data-table
+          v-model:sort-by="sortBy"
           :headers="headers"
           :items="entries"
           :search="search"
           :group-by="groupBy"
           :items-per-page="-1"
+          :custom-key-sort="{
+            start: (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+          }"
+          multi-sort
           density="compact"
         >
           <!-- <template #group-header="{ item, toggleGroup, columns, isGroupOpen }">
@@ -137,6 +154,21 @@
               </td>
             </tr>
           </template>
+          <template #[`item.start`]="{ item }">
+            <span class="text-no-wrap">
+              {{
+                ((item) => {
+                  const date = new Date(item.raw.start);
+                  return `${date.toLocaleString("default", {
+                    weekday: "short",
+                  })} ${date.toLocaleString("default", {
+                    month: "short",
+                    day: "numeric",
+                  })}`;
+                })(item)
+              }}
+            </span>
+          </template>
           <template #[`item.comments`]="{ item, toggleExpand, isExpanded }">
             <div class="d-flex w-100 h-100 align-center">
               <span class="mr-4 flex-grow-1 text-center">{{
@@ -177,7 +209,12 @@
 </template>
 <script setup lang="ts">
 import { Data, NumberDataSet, NumberDataTypes } from "@/types/data";
-import { mdiChevronDown, mdiChevronRight, mdiTrashCan } from "@mdi/js";
+import {
+mdiChevronDown,
+mdiChevronRight,
+mdiSortVariantRemove,
+mdiTrashCan,
+} from "@mdi/js";
 import { ref as dbRef, orderByChild, query, remove } from "firebase/database";
 import { Ref, computed, ref } from "vue";
 import { useDatabase, useDatabaseList } from "vuefire";
@@ -316,6 +353,7 @@ function proportionToColor(
 
 const search = ref("");
 const groupBy = ref<readonly SortItem[]>([]);
+const sortBy = ref<SortItem[]>([]);
 
 const groupBys: DataTableHeader[] = [
   {
@@ -330,6 +368,11 @@ const groupBys: DataTableHeader[] = [
   },
 ];
 const headers: Ref<DataTableHeader[]> = ref([
+  {
+    title: "Date",
+    key: "start",
+    sortable: true,
+  },
   {
     title: "Recorder",
     key: "recorder",
