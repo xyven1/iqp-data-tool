@@ -45,7 +45,7 @@
           :items="entries"
           :search="search"
           :group-by="groupBy"
-          :items-per-page="10"
+          :items-per-page="-1"
           density="compact"
         >
           <!-- <template #group-header="{ item, toggleGroup, columns, isGroupOpen }">
@@ -111,13 +111,15 @@
                 background: colors
                   ? `${proportionToColor(item.raw, e.type, 1, 0.6)}`
                   : 'transparent',
-                transition: 'background-color .5s, width .5s',
-                width: colors ? '100%' : 0,
-                height: '100%',
               }"
-              class="h-100 d-flex align-center justify-center"
+              style="transition: background-color 0.5s"
+              class="h-100 w-100 d-flex align-center justify-center"
             >
-              <span class="text-center">{{ item.raw[e.type] }}</span>
+              <span>{{ item.raw[e.type] }}</span>
+              <span
+                style="transition: flex 0.5s"
+                :style="{ flex: colors ? 0 : 'auto' }"
+              />
             </div>
           </template>
           <template #expanded-row="{ item, columns }">
