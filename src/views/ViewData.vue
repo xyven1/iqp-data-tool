@@ -195,7 +195,10 @@
               class="rounded-0"
               @click="
                 () => {
-                  remove(dbRef(db, 'entries/' + item.key));
+                  console.log(item);
+                  push(dbRef(db, 'entries__trash/'), item.raw).then((a) => {
+                    remove(dbRef(db, 'entries/' + item.raw.id));
+                  });
                 }
               "
             >
@@ -215,7 +218,13 @@ mdiChevronRight,
 mdiSortVariantRemove,
 mdiTrashCan,
 } from "@mdi/js";
-import { ref as dbRef, orderByChild, query, remove } from "firebase/database";
+import {
+ref as dbRef,
+orderByChild,
+push,
+query,
+remove,
+} from "firebase/database";
 import { Ref, computed, ref } from "vue";
 import { useDatabase, useDatabaseList } from "vuefire";
 const db = useDatabase();

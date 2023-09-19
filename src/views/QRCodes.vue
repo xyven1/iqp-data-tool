@@ -3,51 +3,107 @@
     <v-row class="w-100 flex-column">
       <div class="flex-grow-1">
         <GoogleMap
-          ref="mapRef" class="w-100 h-100" api-key="AIzaSyAsF0Boo8OBXxW2l9gCYduvF8nusQvHPls" :center="center"
-          :zoom="12" :libraries="[
-            'geometry'
-          ]" :styles="[...(darkMode ? gmapsDark : []), ...[
-            {
-              featureType: 'poi',
-              stylers: [
-                { visibility: 'off' }
-              ]
-            },
-            {
-              featureType: 'transit',
-              stylers: [
-                { visibility: 'off' }
-              ]
-            },
-          ]]"
+          ref="mapRef"
+          class="w-100 h-100"
+          api-key="AIzaSyAsF0Boo8OBXxW2l9gCYduvF8nusQvHPls"
+          :center="center"
+          :zoom="12"
+          :libraries="['geometry']"
+          :styles="[
+            ...(darkMode ? gmapsDark : []),
+            ...[
+              {
+                featureType: 'poi',
+                stylers: [{ visibility: 'off' }],
+              },
+              {
+                featureType: 'transit',
+                stylers: [{ visibility: 'off' }],
+              },
+            ],
+          ]"
         >
           <CustomControl position="LEFT_BOTTOM">
             <div class="d-flex flex-column">
-              <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="viewAllCodes">
+              <v-btn
+                class="v-btn-gmaps"
+                variant="flat"
+                icon
+                theme="light"
+                @click="viewAllCodes"
+              >
                 <v-icon size="large" :icon="mdiCircleExpand" />
               </v-btn>
-              <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="cluster = !cluster">
-                <v-expand-transition>
-                  <v-icon v-if="cluster" class="position-absolute" size="large" :icon="mdiCircleMultipleOutline" />
-                  <v-icon v-else class="position-absolute" size="large" :icon="mdiNumeric9Circle" />
-                </v-expand-transition>
-              </v-btn>
-              <v-btn class="v-btn-gmaps" variant="flat" icon theme="light" @click="dots = !dots">
-                <v-expand-transition>
-                  <v-icon v-if="dots" class="position-absolute" size="large" :icon="mdiQrcode" color="secondary" />
-                  <v-icon v-else class="position-absolute" size="x-small" :icon="mdiCircleOutline" color="secondary" />
-                </v-expand-transition>
-              </v-btn>
               <v-btn
-                class="v-btn-gmaps" variant="flat" icon theme="light"
-                @click="centering = true; updateCenter(coords)"
+                class="v-btn-gmaps"
+                variant="flat"
+                icon
+                theme="light"
+                @click="cluster = !cluster"
               >
                 <v-expand-transition>
                   <v-icon
-                    v-if="centering" class="position-absolute" size="large" :icon="mdiCrosshairsGps"
+                    v-if="cluster"
+                    class="position-absolute"
+                    size="large"
+                    :icon="mdiCircleMultipleOutline"
+                  />
+                  <v-icon
+                    v-else
+                    class="position-absolute"
+                    size="large"
+                    :icon="mdiNumeric9Circle"
+                  />
+                </v-expand-transition>
+              </v-btn>
+              <v-btn
+                class="v-btn-gmaps"
+                variant="flat"
+                icon
+                theme="light"
+                @click="dots = !dots"
+              >
+                <v-expand-transition>
+                  <v-icon
+                    v-if="dots"
+                    class="position-absolute"
+                    size="large"
+                    :icon="mdiQrcode"
+                    color="secondary"
+                  />
+                  <v-icon
+                    v-else
+                    class="position-absolute"
+                    size="x-small"
+                    :icon="mdiCircleOutline"
+                    color="secondary"
+                  />
+                </v-expand-transition>
+              </v-btn>
+              <v-btn
+                class="v-btn-gmaps"
+                variant="flat"
+                icon
+                theme="light"
+                @click="
+                  centering = true;
+                  updateCenter(coords);
+                "
+              >
+                <v-expand-transition>
+                  <v-icon
+                    v-if="centering"
+                    class="position-absolute"
+                    size="large"
+                    :icon="mdiCrosshairsGps"
                     color="#5384ed"
                   />
-                  <v-icon v-else class="position-absolute" size="large" :icon="mdiCrosshairs" />
+                  <v-icon
+                    v-else
+                    class="position-absolute"
+                    size="large"
+                    :icon="mdiCrosshairs"
+                  />
                 </v-expand-transition>
               </v-btn>
             </div>
@@ -56,7 +112,7 @@
             :options="{
               position: {
                 lat: coords.latitude,
-                lng: coords.longitude
+                lng: coords.longitude,
               },
               icon: {
                 path: 0,
@@ -68,43 +124,46 @@
               },
               draggable: false,
               clickable: false,
-              zIndex: 1
+              zIndex: 1,
             }"
           />
           <Circle
             :options="{
               center: {
                 lat: coords.latitude,
-                lng: coords.longitude
+                lng: coords.longitude,
               },
               radius: coords.accuracy,
-              fillOpacity: .1,
-              strokeWeight: .5,
+              fillOpacity: 0.1,
+              strokeWeight: 0.5,
               strokeOpacity: 1,
               fillColor: '#5384ED',
               strokeColor: '#5384ED',
               draggable: false,
               clickable: false,
               editable: false,
-              zIndex: 0
+              zIndex: 0,
             }"
           />
           <component
-            :is="cluster ? MarkerCluster : 'div'" :options="{
-              algorithm: superCluster
+            :is="cluster ? MarkerCluster : 'div'"
+            :options="{
+              algorithm: superCluster,
             }"
           >
             <Marker
-              v-for="point of qrcodeList" :key="point.id" :options="{
+              v-for="point of qrcodeList"
+              :key="point.id"
+              :options="{
                 position: {
                   lat: point.latitude,
-                  lng: point.longitude
+                  lng: point.longitude,
                 },
                 icon: {
                   path: dots ? mdiCircleSmall : mdiQrcode,
                   strokeColor: theme.current.value.colors.secondary,
                   fillColor: theme.current.value.colors.secondary,
-                  fillOpacity: dots ? .7 : 0,
+                  fillOpacity: dots ? 0.7 : 0,
                   anchor: {
                     x: 12,
                     y: 12,
@@ -117,7 +176,12 @@
               }"
             >
               <InfoWindow ref="infoWindows">
-                <v-btn :append-icon="mdiTrashCan" color="error" variant="text" @click="deleteQRCode(point.id)">
+                <v-btn
+                  :append-icon="mdiTrashCan"
+                  color="error"
+                  variant="text"
+                  @click="deleteQRCode(point)"
+                >
                   Delete
                 </v-btn>
               </InfoWindow>
@@ -141,25 +205,49 @@
       </div>
     </v-row>
     <v-row class="w-100 flex-grow-0 justify-end pa-1">
-      <v-btn :prepend-icon="mdiMapMarkerPlus" color="secondary" variant="tonal" class="ma-1" @click="addPoint">
+      <v-btn
+        :prepend-icon="mdiMapMarkerPlus"
+        color="secondary"
+        variant="tonal"
+        class="ma-1"
+        @click="addPoint"
+      >
         Add QRCode
       </v-btn>
     </v-row>
   </v-container>
 </template>
 <script setup lang="ts">
-import { useThemeStore } from '@/store/theme';
-import { QRCode } from '@/types/qrcode';
-import { SuperClusterAlgorithm } from '@googlemaps/markerclusterer';
-import { mdiCircleExpand, mdiCircleMultipleOutline, mdiCircleOutline, mdiCircleSmall, mdiCrosshairs, mdiCrosshairsGps, mdiMapMarkerPlus, mdiNumeric9Circle, mdiQrcode, mdiTrashCan } from '@mdi/js';
-import { useGeolocation } from '@vueuse/core';
+import { useThemeStore } from "@/store/theme";
+import { QRCode } from "@/types/qrcode";
+import { SuperClusterAlgorithm } from "@googlemaps/markerclusterer";
+import {
+mdiCircleExpand,
+mdiCircleMultipleOutline,
+mdiCircleOutline,
+mdiCircleSmall,
+mdiCrosshairs,
+mdiCrosshairsGps,
+mdiMapMarkerPlus,
+mdiNumeric9Circle,
+mdiQrcode,
+mdiTrashCan,
+} from "@mdi/js";
+import { useGeolocation } from "@vueuse/core";
 import { push, ref as refDb, remove } from "firebase/database";
-import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
-import { Circle, CustomControl, GoogleMap, InfoWindow, Marker, MarkerCluster } from 'vue3-google-map';
-import { dark as gmapsDark } from 'vue3-google-map/themes';
-import { useDatabase, useDatabaseList } from 'vuefire';
-import { useTheme } from 'vuetify/lib/framework.mjs';
+import { storeToRefs } from "pinia";
+import { ref, watch } from "vue";
+import {
+Circle,
+CustomControl,
+GoogleMap,
+InfoWindow,
+Marker,
+MarkerCluster,
+} from "vue3-google-map";
+import { dark as gmapsDark } from "vue3-google-map/themes";
+import { useDatabase, useDatabaseList } from "vuefire";
+import { useTheme } from "vuetify/lib/framework.mjs";
 
 // Themeing
 const { darkMode } = storeToRefs(useThemeStore());
@@ -176,14 +264,21 @@ const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null);
 const infoWindows = ref<google.maps.InfoWindow[]>([]);
 const api = ref<typeof google.maps | null>(null);
 const map = ref<google.maps.Map | null>(null);
-watch(() => mapRef.value?.ready, (ready) => {
-  if (!ready) return;
-  api.value = mapRef.value?.api ?? null;
-  map.value = mapRef.value?.map ?? null;
-  if (!api.value || !map.value) return;
-  api.value.event.addListener(map.value, 'mousedown', () => infoWindows.value.forEach((infoWindow) => infoWindow.close()));
-  api.value.event.addListener(map.value, 'drag', () => centering.value = false);
-});
+watch(
+  () => mapRef.value?.ready,
+  (ready) => {
+    if (!ready) return;
+    api.value = mapRef.value?.api ?? null;
+    map.value = mapRef.value?.map ?? null;
+    if (!api.value || !map.value) return;
+    api.value.event.addListener(map.value, "mousedown", () =>
+      infoWindows.value.forEach((infoWindow) => infoWindow.close()),
+    );
+    api.value.event.addListener(map.value, "drag", () => {
+      centering.value = false;
+    });
+  },
+);
 const centering = ref(true);
 const center = ref<google.maps.LatLngLiteral>({
   lat: 64.14,
@@ -213,7 +308,7 @@ watch(() => centering.value && coords.value, updateCenter);
 
 // Database
 const db = useDatabase();
-const qrcodes = refDb(db, 'qrcodes');
+const qrcodes = refDb(db, "qrcodes");
 const qrcodeList = useDatabaseList<QRCode>(qrcodes);
 function addPoint() {
   if (api.value === null) return;
@@ -221,13 +316,16 @@ function addPoint() {
   for (const qrcode of qrcodeList.value) {
     const distance = a.geometry.spherical.computeDistanceBetween(
       new a.LatLng(qrcode.latitude, qrcode.longitude),
-      new a.LatLng(coords.value.latitude, coords.value.longitude)
+      new a.LatLng(coords.value.latitude, coords.value.longitude),
     );
     if (distance < 1) {
-      if (confirm("There already appears to be a qrcode at this location, are you sure you would like to add?"))
+      if (
+        confirm(
+          "There already appears to be a qrcode at this location, are you sure you would like to add?",
+        )
+      )
         break;
-      else
-        return;
+      else return;
     }
   }
   push(qrcodes, {
@@ -235,8 +333,14 @@ function addPoint() {
     longitude: coords.value.longitude,
   });
 }
-function deleteQRCode(id: string) {
-  remove(refDb(db, 'qrcodes/' + id))
+function deleteQRCode(
+  point: QRCode & {
+    readonly id: string;
+  },
+) {
+  push(refDb(db, "qrcodes__trash"), point).then(() =>
+    remove(refDb(db, "qrcodes/" + point.id)),
+  );
 }
 </script>
 
@@ -248,7 +352,7 @@ function deleteQRCode(id: string) {
   min-width: 0px;
 }
 
-.mapdiv>div>div>div {
+.mapdiv > div > div > div {
   background-color: rgb(var(--v-theme-background));
 }
 </style>
