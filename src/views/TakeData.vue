@@ -137,7 +137,7 @@
                 <v-spacer />
                 <number-chip
                   v-model="currentData[type]" :inner="5" :outer="1" :min="0" :max="500" :height="48"
-                  :min-width="240" :width="240" style="margin-top: 1px; margin-bottom: 1px;"
+                  :min-width="200" :width="200" style="margin-top: 1px; margin-bottom: 1px;"
                 />
               </v-col>
               <v-divider v-if="i != Object.entries(NumberDataTypes).length - 1" />
