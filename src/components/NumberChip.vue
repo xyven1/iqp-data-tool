@@ -12,14 +12,14 @@
       v-if="outer != inner" size="x-large" variant="flat" :min-width="0" :height="height" class="number-chip-btn"
       color="secondary" @click="sub(outer)"
     >
-      <v-icon :icon="mdiMinus" />{{ outer === 1 ? "" : outer }}
+      <v-icon :icon="mdiMinus" />{{ outer }}
     </v-btn>
-    <v-btn
+    <!-- <v-btn
       variant="tonal" size="x-large" color="secondary" :min-width="0" :height="height" class="number-chip-btn"
       @click="sub(inner)"
     >
       <v-icon :icon="mdiMinus" />{{ inner === 1 ? "" : inner }}
-    </v-btn>
+    </v-btn> -->
     <v-text-field
       variant="plain" type="number" class="no-arrows text-h5 mb-2" :model-value="modelValue" :min="min"
       :max="max" hide-details density="compact" :step="inner" @update:model-value="(n) => {
@@ -38,7 +38,7 @@
       v-if="outer != inner" size="x-large" :min-width="0" :height="height" class="number-chip-btn" variant="flat"
       color="secondary" @click="add(outer)"
     >
-      <v-icon :icon="mdiPlus" /> {{ outer === 1 ? "" : outer }}
+      <v-icon :icon="mdiPlus" /> {{ outer }}
     </v-btn>
   </div>
 </template>
