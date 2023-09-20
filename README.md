@@ -1,9 +1,24 @@
-# essentials
+# IQP Data Tools
 
-For genearting icons
+This repository contains code written to help facilitate data collection and visualization during IQP. It uses the vite-vue-vuetify stack, and firebase for a backend. 
+
+### Goals
+- Provide a convienient way to do observatinoal data collection during IQP
+- Provide visualizations of that data
+- Public facing version of the app for consumtion by those who would read a Executive Summary
+- Centralize data from multiple sources
+- Provide simple utilities like tracking QRCode locations
+
+### Non-Goals
+- Replace existing tools such as ArcGIS
+- 
+
+## Generating icons
+
 ```
 npx pwa-asset-generator icon.svg ./public -b "linear-gradient(to right top, #0f126a, #333791)" -w -f -i index.html
 ```
+
 ## Project setup
 
 ```
