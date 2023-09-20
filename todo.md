@@ -1,5 +1,0 @@
-- [-] Finish form
-- [x] Store with persistent
-- [-] sheets
-- [x] publish
-- [x] pwa
