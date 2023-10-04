@@ -10,8 +10,8 @@ This repository contains code written to help facilitate data collection and vis
 - Provide simple utilities like tracking QRCode locations
 
 ### Non-Goals
-- Replace existing tools such as ArcGIS
-- 
+- Replace existing tools such as ArcGIS, Qualtrics, etc.
+- Act as a one-size fits all solution for multiple projects (projects should copy and extend this code as needed)
 
 ## Generating icons
 
