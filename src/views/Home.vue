@@ -53,8 +53,8 @@
           <v-card-title>Already Installed!</v-card-title>
           <v-card-text class="d-flex align-center">
             The device already has the application installed! Check your apps
-            for an app called "IQP Tools", with this icon:
-            <v-img src="@/assets/icon.png" :width="80" />
+            for an app called "ISS Tools", with this icon:
+            <v-img class="mx-2" src="@/assets/icon.png" :width="48" />
           </v-card-text>
           <v-card-actions class="justify-center">
             <v-btn color="error" @click="alreadyInstalledOverlay = false">
@@ -68,11 +68,21 @@
         class="d-flex flex-col ma-2 justify-center align-center"
       >
         <v-card class="text-center">
-          <v-card-title>Device Unknown</v-card-title>
+          <v-card-title class="text-wrap">
+            Device Unknown or Already Installed
+          </v-card-title>
           <v-card-text>
-            The current device type is not known. Please look up directions for
-            how to install a PWA for your particular platform (i.e. firefox on
-            windows, opera on mac, etc.)
+            The current device type is not known, or the application is already
+            installed.
+            <hr class="my-1">
+            <div class="d-flex align-center">
+              Check your apps for an app called "ISS Tools", with this icon:
+              <v-img class="mx-2" src="@/assets/icon.png" :width="48" />
+            </div>
+            <div>
+              or look up directions for how to install a PWA for your particular
+              platform (i.e. firefox on windows, opera on mac, etc.)
+            </div>
           </v-card-text>
           <v-card-actions class="justify-center">
             <v-btn color="error" @click="unknownInstallOverlay = false">

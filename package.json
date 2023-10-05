@@ -1,6 +1,6 @@
 {
   "name": "iss-scooter-data-collection",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "scripts": {
     "dev": "vite",
