@@ -46,6 +46,24 @@
         </v-card>
       </v-overlay>
       <v-overlay
+        v-model="alreadyInstalledOverlay"
+        class="d-flex flex-col ma-2 justify-center align-center"
+      >
+        <v-card class="text-center">
+          <v-card-title>Already Installed!</v-card-title>
+          <v-card-text class="d-flex align-center">
+            The device already has the application installed! Check your apps
+            for an app called "IQP Tools", with this icon:
+            <v-img src="@/assets/icon.png" :width="80" />
+          </v-card-text>
+          <v-card-actions class="justify-center">
+            <v-btn color="error" @click="alreadyInstalledOverlay = false">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-overlay>
+      <v-overlay
         v-model="unknownInstallOverlay"
         class="d-flex flex-col ma-2 justify-center align-center"
       >
@@ -73,16 +91,26 @@ import { useDisplay } from "vuetify";
 const { platform } = useDisplay();
 
 const iosInstallOverlay = ref(false);
+const alreadyInstalledOverlay = ref(false);
 const unknownInstallOverlay = ref(false);
 let installPromptEvent: BeforeInstallPromptEvent | null = null;
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   installPromptEvent = e as BeforeInstallPromptEvent;
 });
-const isInStandaloneMode =
-  "standalone" in window.navigator && window.navigator.standalone;
-function installPWA() {
-  if (platform.value.ios) {
+const isInStandaloneMode = window.matchMedia(
+  "(display-mode: standalone)",
+).matches;
+async function installPWA() {
+  let installed = false;
+  //check if browser version supports the api
+  if ("getInstalledRelatedApps" in window.navigator) {
+    const relatedApps = await navigator.getInstalledRelatedApps();
+    installed = relatedApps.length > 0;
+  }
+  if (installed || true) {
+    alreadyInstalledOverlay.value = true;
+  } else if (platform.value.ios) {
     iosInstallOverlay.value = true;
   } else if (installPromptEvent) {
     installPromptEvent.prompt();
