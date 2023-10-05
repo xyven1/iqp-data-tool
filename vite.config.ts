@@ -55,6 +55,12 @@ export default defineConfig({
             purpose: "maskable",
           },
         ],
+        related_applications: [
+          {
+            platform: "webapp",
+            url: "https://iss-scooter-data-collection.web.app",
+          },
+        ],
         shortcuts: [
           {
             name: "Take Data",
