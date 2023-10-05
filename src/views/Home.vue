@@ -96,7 +96,7 @@ const unknownInstallOverlay = ref(false);
 let installPromptEvent: BeforeInstallPromptEvent | null = null;
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
-  installPromptEvent = e as BeforeInstallPromptEvent;
+  installPromptEvent = e;
 });
 const isInStandaloneMode = window.matchMedia(
   "(display-mode: standalone)",
@@ -108,7 +108,7 @@ async function installPWA() {
     const relatedApps = await navigator.getInstalledRelatedApps();
     installed = relatedApps.length > 0;
   }
-  if (installed || true) {
+  if (installed) {
     alreadyInstalledOverlay.value = true;
   } else if (platform.value.ios) {
     iosInstallOverlay.value = true;

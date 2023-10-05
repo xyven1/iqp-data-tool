@@ -28,8 +28,9 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
-declare global {
-  interface WindowEventMap {
-    beforeinstallprompt: BeforeInstallPromptEvent;
-  }
+declare interface WindowEventMap {
+  beforeinstallprompt: BeforeInstallPromptEvent;
+}
+declare interface Navigator {
+  getInstalledRelatedApps: () => Promise<sequence<RelatedApplication>>;
 }
