@@ -1,11 +1,11 @@
 // Composables
 import { handleSignInWithRedirectCode, isAuthorized } from "@/utils/auth";
-import { mdiClipboard, mdiQrcodePlus, mdiViewList } from "@mdi/js";
+import { mdiClipboard, mdiQrcodePlus, mdiViewList, mdiHome } from "@mdi/js";
 import "vue-router";
 import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
 
 // To ensure it is treated as a module, add at least one `export` statement
-export { };
+export {};
 
 declare module "vue-router" {
   interface RouteMeta {
@@ -22,6 +22,16 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
+        name: "Home",
+        meta: {
+          nav: true,
+          auth: false,
+          icon: mdiHome,
+        },
+        component: () => import("@/views/Home.vue"),
+      },
+      {
+        path: "take-data",
         name: "Take Data",
         meta: {
           nav: true,
