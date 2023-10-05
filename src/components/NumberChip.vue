@@ -136,6 +136,7 @@ function add(value: number) {
   height: 50px;
   min-width: 0;
   max-width: 100%;
+  touch-action: none;
 }
 
 .number-chip:focus-within {
